@@ -12,12 +12,26 @@ class BulkRegistration(TimeStampedModel):
     quantity = models.PositiveIntegerField(default=0)
 
 
-class ItemRegistration(TimeStampedModel):
-    registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='registrations')
-    item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+class ItemBase(models.Model):
+    registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='items')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
     cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    class Meta:
+        abstract = True
+
+
+class ItemRegistration(TimeStampedModel, ItemBase):
+    registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='items')
+
+    class Meta:
+        unique_together = ('registration', 'item')
+
+
+class ItemRegistrationChange(TimeStampedModel, ItemBase):
+    registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='changes')
+    reason = models.TextField()
 
 # class ItemVariationRegistration(TimeStampedModel):
 #     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

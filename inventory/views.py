@@ -1,19 +1,22 @@
-import json
 from decimal import Decimal
 
-from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets, status, generics
-from rest_framework.generics import ListCreateAPIView, CreateAPIView
-from rest_framework.request import Request
+from rest_framework import viewsets, status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from inventory.models import BulkRegistration, ItemRegistration
+from inventory.models import BulkRegistration, ItemRegistration, ItemRegistrationChange
 from inventory.register import Register
-from inventory.serializers import ItemRegisterSerializer, ItemAddRegisterSerializer, BulkRegistrationSerializer, \
-    ItemRegistrationSerializer
-from product.models import Item
+from inventory.serializers import (
+    ItemRegisterSerializer,
+    ItemAddRegisterSerializer,
+    BulkRegistrationSerializer,
+    ItemRegistrationSerializer,
+    BulkRegistrationDetailsSerializer,
+    ItemRegistrationChangeSerializer,
+    ItemChangeRegisterSerializer
+)
 
 
 class RegisterViewSet(viewsets.ViewSet):
@@ -80,7 +83,10 @@ class BulkRegistrationViewSet(viewsets.ViewSet):
             registration_items.append(registration_item)
         ItemRegistration.objects.bulk_create(registration_items)
         register.clear()
-        serializer = BulkRegistrationSerializer(bulk)
+        serializer_context = {
+            'request': request,
+        }
+        serializer = BulkRegistrationSerializer(bulk, context=serializer_context)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
@@ -90,11 +96,27 @@ class BulkRegistrationViewSet(viewsets.ViewSet):
         serializer = BulkRegistrationSerializer(BulkRegistration.objects.all(), many=True, context=serializer_context)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def retrieve(self, request, pk=None):
+        user = get_object_or_404(BulkRegistration, pk=pk)
+        serializer = BulkRegistrationDetailsSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class ItemRegistrationViewSet(viewsets.ModelViewSet):
     serializer_class = ItemRegistrationSerializer
     filterset_fields = ['registration']
+    queryset = ItemRegistration.objects.all()
 
-    def get_queryset(self):
-        queryset = ItemRegistration.objects.all()
-        return queryset
+    def create(self, request, *args, **kwargs):
+        serializer_change = ItemRegistrationChangeSerializer(data=request.data)
+        if serializer_change.is_valid():
+            serializer_change.save()
+            return Response(serializer_change.data, status=status.HTTP_200_OK)
+        else:
+            serializer_create = ItemChangeRegisterSerializer(data=request.data)
+            if serializer_create.is_valid():
+                ItemRegistrationChange.objects.create(**serializer_create.validated_data)
+                serializer_create.save()
+                return Response(serializer_create.data, status=status.HTTP_200_OK)
+        return Response(serializer_create.errors, status=status.HTTP_400_BAD_REQUEST)
+

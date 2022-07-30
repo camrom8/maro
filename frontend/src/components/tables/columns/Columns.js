@@ -9,8 +9,8 @@ const quantityWidth = {
 }
 
 const shortTextWidth = {
-  minWidth: 100,
-  width: 150
+  minWidth: 80,
+  width: 100
 }
 
 const normalTextWidth = {

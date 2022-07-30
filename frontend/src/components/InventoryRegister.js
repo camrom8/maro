@@ -155,7 +155,7 @@ export const InventoryRegister = () => {
 
   useEffect(() => {
     (async () => {
-       await axios.get("/inventory/api/register-list/")
+       await axios.get("/inventory/api/register/")
          .then((data) => {
            setRegisterCells(data.data.items);
          })
@@ -176,7 +176,7 @@ export const InventoryRegister = () => {
       cost:cost,
       quantity:quantity
     }
-    axios.post(`/inventory/api/register-list/`, payload)
+    axios.post(`/inventory/api/register/`, payload)
       .then((data) => {
         setRegisterCells(data.data.items);
       })
@@ -212,10 +212,6 @@ export const InventoryRegister = () => {
       description: description,
     }
     axios.post(`/inventory/api/registration/`, payload)
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => console.log(error));
   };
   return (
     <Dashboard title="Registrar Mercancia">

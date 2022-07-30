@@ -6,12 +6,17 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
-  costColumn, createdColumn,
+  costColumn,
+  createdColumn,
   descriptionColumn,
   nameColumn,
+  optionsColumn,
   quantityColumn,
 } from "./tables/columns/Columns"
-import Dashboard from "./dashboard/Dashboard";
+import Dashboard from "./dashboard/Dashboard";;
+import BaseDialog from "./dialogs/SimpleDialog";
+import {theme} from "./dashboard/themes/theme1";
+import RegistrationDetails from "./content/RegistrationDetails";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -35,6 +40,33 @@ export const InventoryRegistration = () => {
         ...nameColumn,
         Header: "agregado por",
         accessor: "user",
+      },
+      {
+        ...optionsColumn,
+        Cell: ({ cell: { row, value } }) => {
+          const [open, setOpen] = useState(false);
+          const handleClose = () => {
+            setOpen(false);
+          };
+          const handleOpen = () => {
+            setOpen(true);
+          };
+          return (
+              <BaseDialog
+                  title="Detalles del Registro"
+                  buttonText="ver"
+                  MaxWidth="md"
+                  theme={theme}
+                  open={open}
+                  openAction={handleOpen}
+                  closeAction={handleClose}
+                >
+                <RegistrationDetails
+                    RegistrationId={value}
+                />
+              </BaseDialog>
+          )
+        }
       },
     ],
     []

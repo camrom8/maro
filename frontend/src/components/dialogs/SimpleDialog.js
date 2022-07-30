@@ -6,7 +6,7 @@ import {
   ThemeProvider
 } from "@mui/material";
 
-export default function BaseDialog({ title, theme, buttonText, open, openAction, closeAction, children}) {
+export default function BaseDialog({ title, theme, buttonText, open, openAction, closeAction, MaxWidth, children}) {
 
   const handleClickClose = () => {
     closeAction();
@@ -21,7 +21,7 @@ export default function BaseDialog({ title, theme, buttonText, open, openAction,
       </Button>
       <Dialog
         fullWidth
-        maxWidth="xs"
+        maxWidth={MaxWidth || "xs"}
         onClose={handleClickClose}
         open={open}
       >

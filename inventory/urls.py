@@ -5,9 +5,9 @@ from inventory.views import RegisterViewSet, BulkRegistrationViewSet, ItemRegist
 
 router = routers.DefaultRouter()
 router.register(
-    'register-list',
+    'register',
     RegisterViewSet,
-    basename='register-list'
+    basename='register'
 )
 router.register(
     'registration',
@@ -16,10 +16,18 @@ router.register(
 )
 
 router.register(
-    'registration-detail',
+    'item-registration',
     ItemRegistrationViewSet,
-    basename='registration-detail'
+    basename='item-registration',
 )
+
+router.register(
+    'item-registration',
+    ItemRegistrationViewSet,
+    basename='item-registration',
+)
+
+
 app_name = 'inventory'
 urlpatterns = [
     path('api/', include(router.urls)),
