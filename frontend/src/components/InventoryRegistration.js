@@ -54,7 +54,7 @@ export const InventoryRegistration = () => {
           return (
               <BaseDialog
                   title="Detalles del Registro"
-                  buttonText="ver"
+                  buttonText="detalles"
                   MaxWidth="md"
                   theme={theme}
                   open={open}
@@ -63,6 +63,7 @@ export const InventoryRegistration = () => {
                 >
                 <RegistrationDetails
                     RegistrationId={value}
+                    closeAction={handleClose}
                 />
               </BaseDialog>
           )

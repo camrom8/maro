@@ -13,6 +13,7 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import Link from "@mui/material/Link";
 
 export default function NestedList(props) {
@@ -48,6 +49,12 @@ export default function NestedList(props) {
               <CreateNewFolderIcon />
             </ListItemIcon>
             <ListItemText primary="Registrar Mercancia"/>
+          </ListItemButton>
+          <ListItemButton href="/inventory-registration/" color="primary" sx={{ pl: 3,}} selected={props.active==="Registro"}>
+            <ListItemIcon>
+              <BarChartIcon />
+            </ListItemIcon>
+            <ListItemText primary="Historial Registro"/>
           </ListItemButton>
         </List>
       </Collapse>

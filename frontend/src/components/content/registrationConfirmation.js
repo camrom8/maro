@@ -2,9 +2,8 @@ import React, {useMemo, useState} from "react";
 import {Button, DialogActions, DialogContent, DialogContentText, TextField} from "@mui/material";
 
 export default function RegistrationConfirmation ({handleClose, handleSubmit, rows}) {
-
   const initialFormData = useMemo(() => ({
-    cost: rows.at(-1).cost,
+    cost: rows.at(-1).total_cost,
     quantity: rows.at(-1).quantity,
     description: ""
   }), []);
@@ -17,7 +16,7 @@ export default function RegistrationConfirmation ({handleClose, handleSubmit, ro
     <>
     <DialogContent>
       <DialogContentText mb={3}>
-        {`Al confirmar se registraran un total de ${formData.quantity}  ${formData.quantity > 1? "productos": 'producto'} con un costo total de $${formData.cost}`}
+        {`Al confirmar se registraran un total de ${formData.quantity}  ${formData.quantity > 1? "productos": 'producto'} con un costo total de $${parseFloat(formData.cost).toLocaleString('de-DE', {maximumFractionDigits:2, minimumFractionDigits:2})}`}
       </DialogContentText>
       <TextField
         id="standard-multiline-static"
@@ -26,7 +25,6 @@ export default function RegistrationConfirmation ({handleClose, handleSubmit, ro
         fullWidth
         rows={4}
         onChange={(e) => {
-          console.log(e)
           setFormData({...formData, description: e.target.value})
         }}
         defaultValue=""
@@ -34,8 +32,8 @@ export default function RegistrationConfirmation ({handleClose, handleSubmit, ro
       />
     </DialogContent>
     <DialogActions>
-      <Button onClick={handleClose} color="secondary">Cancel</Button>
-      <Button onClick={handleAccept} href="/inventory-registration/">Guardar</Button>
+      <Button variant="contained" onClick={handleClose} color="secondary">Cancelar</Button>
+      <Button variant="contained" onClick={handleAccept} href="/inventory-registration/">Guardar</Button>
     </DialogActions>
 </>
   )
