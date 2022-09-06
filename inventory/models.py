@@ -11,6 +11,10 @@ class BulkRegistration(TimeStampedModel):
     product_quantity = models.PositiveIntegerField(default=0)
     quantity = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.created:%Y-%m-%d %H:%M} - ' \
+               f'{self.description if len(self.description) < 101 else f"{self.description[0:100]}..."}'
+
 
 class ItemBase(models.Model):
     registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='items')
@@ -28,6 +32,8 @@ class ItemRegistration(TimeStampedModel, ItemBase):
     class Meta:
         unique_together = ('registration', 'item')
 
+    def __str__(self):
+        return f'{self.item} - registration'
 
 class ItemRegistrationChange(TimeStampedModel, ItemBase):
     registration = models.ForeignKey(BulkRegistration, on_delete=models.CASCADE, related_name='changes')

@@ -22,6 +22,9 @@ class Item(TimeStampedModel, StatusModel):
     def expiration(self):
         return self.expiration_date.strftime('%d/%m/%Y') if self.expiration_date else ''
 
+    def __str__(self):
+        return self.name
+
 
 class ItemVariation(models.Model):
     item = models.ManyToManyField(Item)
